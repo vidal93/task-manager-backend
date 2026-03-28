@@ -1,0 +1,24 @@
+# Node
+node_modules/
+
+# Compilado TypeScript
+functions/lib/
+
+# Variables de entorno con secretos
+.env
+.env.local
+*.local
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# Credenciales de servicio
+service-account.json
+serviceAccountKey.json
+*-service-account.json
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
