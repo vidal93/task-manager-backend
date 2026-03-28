@@ -1,5 +1,8 @@
-import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import express, { NextFunction, Request, Response } from 'express';
+
+import taskRoutes from './presentation/routes/task.routes';
+import userRoutes from './presentation/routes/user.routes';
 
 // Separar la app de Firebase facilita probarla de forma aislada
 export function createApp() {
@@ -14,6 +17,9 @@ export function createApp() {
     app.get('/health', (_req: Request, res: Response) => {
         res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
     });
+
+    app.use('/users', userRoutes);
+    app.use('/tasks', taskRoutes);
 
     // Responder con 404 si la ruta no existe
     app.use((_req: Request, res: Response) => {
