@@ -1,0 +1,40 @@
+{
+    "root": true,
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "./tsconfig.json",
+        "sourceType": "module"
+    },
+    "plugins": ["@typescript-eslint", "simple-import-sort", "unused-imports"],
+    "extends": [
+        "airbnb-base",
+        "airbnb-typescript/base",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
+    ],
+    "ignorePatterns": ["lib/**/*"],
+    "rules": {
+        "import/prefer-default-export": "off",
+        "import/first": "error",
+        "import/newline-after-import": "error",
+        "import/no-duplicates": "error",
+        "max-len": ["error", 120],
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error",
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": [
+            "warn",
+            { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+        ],
+        "@typescript-eslint/indent": ["error", 4],
+        "@typescript-eslint/comma-dangle": "off",
+        "@typescript-eslint/quotes": ["error", "single"],
+        "@typescript-eslint/no-shadow": "error",
+        "@typescript-eslint/no-explicit-any": 0
+    }
+}
