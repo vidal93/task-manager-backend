@@ -2,7 +2,7 @@
 export interface User {
     id: string;
     email: string;
-    createdAt: string;
+    createdAt: Date;
 }
 
 // DTO para registrar un nuevo usuario
