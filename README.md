@@ -2,6 +2,18 @@
 
 API REST construida con Express y TypeScript, desplegada como Firebase Cloud Function v2. Forma parte del challenge técnico fullstack de Atom.
 
+## Comentarios sobre el desarrollo
+
+Apliqué Clean Architecture desde el inicio para mantener el dominio completamente desacoplado de Express y Firebase. Esto hace que los casos de uso sean fáciles de testear en aislamiento y que un cambio de base de datos o framework no toque la lógica de negocio.
+
+Separé `app.ts` de `index.ts` para que la app de Express pueda importarse en los tests sin que Firebase Admin intente conectarse a la nube. Sin esa separación los tests de integración con Supertest romperían al inicializar.
+
+Para el manejo de errores en los casos de uso usé un patrón de unión discriminada (`TaskResult`). En lugar de lanzar excepciones, cada caso de uso retorna `{ status: 'ok' | 'not_found' | 'forbidden' }`. TypeScript obliga a manejar todos los estados en las rutas y el flujo queda explícito sin try/catch innecesarios.
+
+Como consecuencia de la arquitectura limpia, el dominio trabaja con `Date` nativo y la conversión desde `Timestamp` de Firestore ocurre dentro del repositorio, en la capa de infraestructura.
+
+Firebase resultó una buena elección para este tipo de aplicación: Firestore maneja la persistencia sin necesidad de configurar un servidor de base de datos, Cloud Functions v2 escala automáticamente y el deploy desde CI/CD con un solo comando simplifica bastante el proceso de entrega.
+
 ## Tecnologías
 
 | Tecnología                  | Versión | Para qué se usa                              |
