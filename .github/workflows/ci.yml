@@ -2,9 +2,9 @@ name: CI - Backend
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs:
   test:
@@ -26,10 +26,12 @@ jobs:
         working-directory: functions
         run: npm ci
 
+      # Corre los tests con reporte de cobertura para el artefacto
       - name: Ejecutar tests
         working-directory: functions
         run: npm run test:coverage
 
+      # Guarda el reporte para revisarlo desde la pestaña Actions de GitHub
       - name: Subir reporte de cobertura
         uses: actions/upload-artifact@v4
         with:
@@ -39,7 +41,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: test
+    needs: test # Solo compila si los tests pasaron
 
     steps:
       - name: Checkout
@@ -63,8 +65,8 @@ jobs:
   deploy:
     name: Deploy to Firebase
     runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build # Solo despliega si el build fue exitoso
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
 
     steps:
       - name: Checkout
@@ -85,12 +87,14 @@ jobs:
         working-directory: functions
         run: npm run build
 
+      # Autentica con la service account configurada en los secrets del repositorio
       - name: Autenticar con Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
+      # Evita acumulación de imágenes antiguas en Artifact Registry
       - name: Configurar política de limpieza de Artifact Registry
         run: npx firebase-tools functions:artifacts:setpolicy --non-interactive
         env:
