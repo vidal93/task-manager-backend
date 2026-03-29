@@ -4,12 +4,18 @@ import express, { NextFunction, Request, Response } from 'express';
 import taskRoutes from './presentation/routes/task.routes';
 import userRoutes from './presentation/routes/user.routes';
 
+const ALLOWED_ORIGINS = [
+    'http://localhost:4200',
+    'https://task-manager-app-900fc.web.app',
+    'https://task-manager-app-900fc.firebaseapp.com',
+];
+
 // Separar la app de Firebase facilita probarla de forma aislada
 export function createApp() {
     const app = express();
 
-    // Aceptar peticiones de cualquier origen
-    app.use(cors({ origin: true }));
+    // Solo los orígenes conocidos pueden consumir la API
+    app.use(cors({ origin: ALLOWED_ORIGINS }));
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
 
