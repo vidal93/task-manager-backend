@@ -145,7 +145,22 @@ npm run build                        # Compila TypeScript a /lib
 firebase deploy --only functions     # Deploy manual
 ```
 
-El pipeline CI/CD en `.github/workflows/ci.yml` hace esto automáticamente en cada push a `main`.
+## CI/CD
+
+GitHub Actions (`.github/workflows/ci.yml`) ejecuta en cada push y PR a `master`:
+
+```
+push/PR a master
+    │
+    ├── [1] test       → npm run test:coverage → sube artefacto de cobertura
+    │
+    ├── [2] build      → npm run build (solo si test pasa)
+    │
+    └── [3] deploy     → configura Artifact Registry → firebase deploy --only functions
+                         (solo push a master, requiere secret GCP_SA_KEY)
+```
+
+El deploy usa `google-github-actions/auth@v2` para autenticarse con la service account y `firebase-tools` para desplegar las funciones.
 
 ## Variables de entorno
 
